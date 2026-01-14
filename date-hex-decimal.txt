@@ -1,0 +1,18 @@
+Date.now()
+1768409794141
+Date.now()/1000
+1768409803.847
+Math.rou
+undefined
+VM434 contentscript-webapp.js:1 [tick extension] script execute
+VM434 contentscript-webapp.js:1 [tick extension] init update
+Math.round(Date.now()/1000)
+1768409831
+(1768409831).toS
+undefined
+(1768409831).toString(16)
+'6967cae7'
+contentscript-webapp.js:1 [tick extension] script execute
+contentscript-webapp.js:1 [tick extension] init update
+parseInt("6967cae7",16)
+1768409831
