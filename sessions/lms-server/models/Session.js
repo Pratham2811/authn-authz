@@ -6,19 +6,6 @@ const sessionSchema= new Schema({
         required:true,
         trim:true,
        },
-       course:[
-      {
-          courseId:{
-             type:Schema.Types.ObjectId,
-             required:true,
-             trim:true,
-        },
-        courseCount:{
-            type:Number,
-            
-        }
-      }
-       ]
 })
 
 const Session= model("session",sessionSchema);

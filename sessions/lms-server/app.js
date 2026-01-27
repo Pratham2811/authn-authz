@@ -6,6 +6,7 @@ import cartRoutes from "./routes/cart.js";
 import authRoutes from "./routes/auth.js";
 import { seedDatabase } from "./seed.js";
 import { authenticate } from "./middleware/auth.js";
+import cookieParser from "cookie-parser";
 
 await connectDB();
 await seedDatabase();
@@ -21,7 +22,7 @@ app.use(
   })
 );
 app.use(express.json());
-
+app.use(cookieParser())
 // Routes
 app.use("/courses", authenticate,courseRoutes);
 app.use("/cart",authenticate,cartRoutes);

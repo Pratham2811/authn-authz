@@ -12,10 +12,11 @@ const cartSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "Course",
           required: true,
+          default:null
         },
         quantity: {
           type: Number,
-          default: 1,
+          default: 0,
         },
       },
     ],
