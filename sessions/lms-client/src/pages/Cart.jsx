@@ -3,11 +3,16 @@ import CartItem from "../components/CartItem";
 
 export default function Cart() {
   const { cart } = useCart();
-
-  const total = cart.reduce(
-    (sum, item) => sum + item.price * (item.quantity || 1),
-    0
-  );
+ 
+ 
+  const{carCount}=useCart();
+const total = cart?.courses?.reduce(
+  (totalMoney, course) => {
+    return totalMoney + (course.courseId?.price || 0);
+  },
+  0
+);
+console.log(total);
 
   if (cart.length === 0) {
     return (
@@ -30,8 +35,8 @@ export default function Cart() {
         Your Cart
       </h1>
       <div className="bg-white dark:bg-gray-800 shadow-lg overflow-hidden divide-y divide-gray-200 rounded-xl dark:divide-gray-700">
-        {cart.map((item) => (
-          <CartItem key={item.name} item={item} />
+        {cart.courses.map((item,index) => (
+          <CartItem key={index} item={item} />
         ))}
       </div>
       <div className="py-6 bg-gray-50 dark:bg-gray-900">

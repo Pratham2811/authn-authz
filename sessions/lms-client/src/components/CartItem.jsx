@@ -3,7 +3,8 @@ import { useCart } from "../context/CartContext";
 
 export default function CartItem({ item }) {
   console.log(item);
-  const { name, image, quantity, price }=item;
+  
+  const { name, image, quantity, price }=item.courseId;
   const { removeFromCart } = useCart();
   return (
     <div className="flex items-center p-6 space-x-6">

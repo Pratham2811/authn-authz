@@ -5,21 +5,26 @@ const router = express.Router();
 
 // GET cart
 router.get("/", async (req, res) => {
-  //Add your code here
+  const { sessionId } = req.cookies;
+  const cartItem = await Cart.findOne({ guestId: sessionId }).populate(
+    "courses.courseId",
+  );
+  return res.json(cartItem);
 });
 
 // Add to cart
 router.post("/", async (req, res) => {
   const sessionId = req.sessionId;
-  console.log(req.body);
-  const courseId=req.body._id;
+
+  const courseId = req.body.data._id;
+
   const cartItem = await Cart.findOne({
     guestId: sessionId,
     "courses.courseId": courseId,
   });
-  console.log(cartItem);
+
   if (cartItem) {
-    await Cart.updateOne(
+    const cartData = await Cart.findOneAndUpdate(
       { guestId: sessionId, "courses.courseId": courseId },
       {
         $inc: {
@@ -27,20 +32,21 @@ router.post("/", async (req, res) => {
         },
       },
     );
-  }else{
-    await Cart.updateOne({guestId:sessionId},{
-      $push:{
-        courses:{
-          courseId:courseId,
-          quantity:1,
-
-        }
-      }
-    },
-    {upsert:true}
-  )
+    return res.json(cartData);
+  } else {
+    const cartData = await Cart.findOneAndUpdate(
+      { guestId: sessionId },
+      {
+        $push: {
+          courses: {
+            courseId: courseId,
+            quantity: 1,
+          },
+        },
+      },
+    );
+    return res.json(cartData);
   }
-  res.json("full filles the add to cart");
 });
 
 // Remove course from cart

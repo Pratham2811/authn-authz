@@ -1,38 +1,45 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { addToCartApi, getCartItems } from "../api/cartApi";
 
-const CartContext = createContext(undefined);
+const CartContext = createContext({ courses: [] });
+
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
+ 
+   const getCart=async ()=>{
+  const resposne=await getCartItems();
+  setCart(resposne)
+  
 
-  const addToCart = async (course) => {
-    setCart((prevCart) => {
-      const existingCourse = prevCart.find((item) => item.name === course.name);
+}
+    useEffect(() => {
+    getCart(); // 🔥 hydrate once
+  }, []);
 
-      if (existingCourse) {
-        return prevCart.map((item) =>
-          item.name === course.name
-            ? { ...item, quantity: (item.quantity || 1) + 1 }
-            : item
-        );
-      }
+const addToCart = async (course) => {
+    const response= await addToCartApi(course);
+     setCart(response)
 
-      return [...prevCart, { ...course, quantity: 1 }];
-    });
+    
   };
 
   const removeFromCart = (course) => {
     setCart((prevCart) => prevCart.filter((item) => item.name !== course.name));
   };
 
-  const cartCount = cart.reduce(
-    (total, item) => total + (item.quantity || 1),
+
+
+   const cartCount = cart?.courses?.reduce(
+    (sum, course) => sum + course.quantity,
     0
   );
+  
+  
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, cartCount }}
+      value={{ cart, addToCart, removeFromCart, cartCount,getCart }}
     >
       {children}
     </CartContext.Provider>
