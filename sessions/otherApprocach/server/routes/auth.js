@@ -52,28 +52,70 @@ router.post("/login", async (req, res) => {
   }
 
   let guestSession = null;
-  let guestcart=null;
+  let guestCart = null;
+
   if (req.signedCookies.sid) {
     guestSession = await Session.findOne({ sid: req.signedCookies.sid });
-    await Session.deleteOne({ sid: req.signedCookies.sid });
-    guestcart=await Cart.findOne({ownerId:req.signedCookies.sid});
-    await Cart.deleteOne({ownerId:req.signedCookies.sid});
 
+    guestCart = await Cart.findOne({
+      ownerType: "guest",
+      ownerId: req.signedCookies.sid,
+    });
   }
 
+  // 🔑 USER CART
+  let userCart = await Cart.findOne({
+    ownerType: "user",
+    ownerId: user._id,
+  });
+
+  if (!userCart) {
+    userCart = await Cart.create({
+      ownerType: "user",
+      ownerId: user._id,
+      courses: [],
+    });
+  }
+
+  // 🔥 MERGE GUEST CART → USER CART
+  if (guestCart) {
+    for (const guestItem of guestCart.courses) {
+      const existingItem = userCart.courses.find((item) =>
+        item.courseId.equals(guestItem.courseId),
+      );
+
+      if (existingItem) {
+        existingItem.quantity += guestItem.quantity;
+      } else {
+        userCart.courses.push({
+          courseId: guestItem.courseId,
+          quantity: guestItem.quantity,
+        });
+      }
+    }
+
+    await userCart.save();
+
+    // cleanup guest cart AFTER merge
+    await Cart.deleteOne({
+      ownerType: "guest",
+      ownerId: req.signedCookies.sid,
+    });
+  }
+
+  // cleanup guest session AFTER everything succeeded
+  if (guestSession) {
+    await Session.deleteOne({ sid: guestSession.sid });
+  }
+
+  // 🔐 CREATE NEW AUTH SESSION
   const newSession = await Session.create({
     sid: crypto.randomUUID(),
     userId: user._id,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
-  const cartData=await Cart.findOne({ownerType:"user",ownerId:user._id});
-  if(cartData){
-   console.log(cartData);
-   
-   
-  }
 
-  res.cookie("sid", newSession.sid, {
+  res.cookie("sid", user._id, {
     httpOnly: true,
     secure: true,
     signed: true,
@@ -92,18 +134,17 @@ router.post("/login", async (req, res) => {
   });
 });
 
-router.post("/logout",async ( req,res)=>{
-   const sessionId=req.signedCookies.sid;
-   if(!sessionId){
-  return res.status(400).json({
-    status:"error",
-    messgae:"Invalid session"
-  });   
-   }
-  const session=await Session.findOne({sid:sessionId});
+router.post("/logout", async (req, res) => {
+  const sessionId = req.signedCookies.sid;
+  if (!sessionId) {
+    return res.status(400).json({
+      status: "error",
+      messgae: "Invalid session",
+    });
+  }
+  const session = await Session.findOne({ sid: sessionId });
 
   console.log(session);
-  
-})
+});
 
 export default router;

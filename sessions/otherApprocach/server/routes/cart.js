@@ -12,7 +12,6 @@ router.get("/", async (req, res) => {
       message: "session id is invalid",
     });
   }
-  // console.log(sessionId);
   const cartData = await Cart.findOne({ ownerId: sessionId }).populate(
     "courses.courseId",
   );
@@ -23,27 +22,24 @@ router.get("/", async (req, res) => {
 // Add to cart
 router.post("/", async (req, res) => {
   let sessionId = req.signedCookies.sid;
-  
-  
+
   if (!sessionId) {
     console.log(sessionId);
     const newSessionId = crypto.randomUUID();
     const guestCart = await Cart.create({
-      ownerType:"guest",
+      ownerType: "guest",
       ownerId: newSessionId,
     });
-    const session=await Session.create({
-      sid:newSessionId,
-
-    })
+    const session = await Session.create({
+      sid: newSessionId,
+    });
     sessionId = newSessionId;
-   
+
     res.cookie("sid", newSessionId, {
       httpOnly: true,
       signed: true,
       maxAge: 1000 * 60 * 60 * 60,
     });
-    
   }
   const courseId = new mongoose.Types.ObjectId(req.body.courseId);
 
@@ -55,14 +51,14 @@ router.post("/", async (req, res) => {
       },
     },
   );
-console.log(result);
+  console.log(result);
 
   if (result.matchedCount === 0) {
     const cartItem = await Cart.updateOne(
       { ownerId: sessionId },
       {
         $push: {
-          "courses": {
+          courses: {
             courseId: courseId,
             quantity: 1,
           },
@@ -79,7 +75,7 @@ router.delete("/:courseId", async (req, res) => {
   const sessionId = req.signedCookies.sid;
   const session = await Cart.updateOne(
     { ownerId: sessionId },
-    { $pull: { "courses": { courseId } } },
+    { $pull: { courses: { courseId } } },
   );
 
   res.json({ message: "item deleted succesfully" });
