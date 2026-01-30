@@ -5,6 +5,7 @@ export const addToCartApi=async(item)=>{
    const res=await axiosInstance.post("/cart",{
     data:item,
    },{withCredentials:true})
+ 
    
    return res.data;
 }

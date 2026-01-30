@@ -1,17 +1,18 @@
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { addToCartAPi, getCartApi } from "../api/cartApi";
 
-export default function CourseCard(item) {
-  const { addToCart } = useCart();
+export default function CourseCard(course) {
+  const { name, price, image, _id } = course;
+  const {setCart } = useCart();
+  const handleAddToCart = async (courseId,course) => {
+    const data = await addToCartAPi(courseId);
+   const cartData=await getCartApi();
 
-
-
-  const { name, price, image } = item;
-  const handleCart = async (item) => {
-    const response = await addToCart(item);
-    console.log(response);
+    setCart(cartData)
     
   };
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border-2 border-transparent hover:border-indigo-500 transition-colors">
       <img src={image} alt={name} className="w-full h-48 object-cover" />
@@ -24,7 +25,7 @@ export default function CourseCard(item) {
             ₹{price}
           </span>
           <button
-            onClick={() => handleCart(item)}
+            onClick={() => handleAddToCart(_id,course)}
             className="flex cursor-pointer items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors"
           >
             <ShoppingCart className="w-5 h-5" />

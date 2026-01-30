@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { addToCartApi, getCartItems } from "../api/cartApi";
+import { addToCartApi, getCartItems, removeFromCartApi } from "../api/cartApi";
 
 const CartContext = createContext({ courses: [] });
 
@@ -20,12 +20,15 @@ export function CartProvider({ children }) {
 const addToCart = async (course) => {
     const response= await addToCartApi(course);
      setCart(response)
-
+   
+   
     
   };
 
-  const removeFromCart = (course) => {
-    setCart((prevCart) => prevCart.filter((item) => item.name !== course.name));
+  const removeFromCart =async (course) => {
+    const response=await removeFromCartApi(course)
+    console.log(response);
+    
   };
 
 

@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Pratham2811/authn-authz/issues"
   },
-  "homepage": "https://github.com/Pratham2811/authn-authz#readme"
+  "homepage": "https://github.com/Pratham2811/authn-authz#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.7"
+  }
 }

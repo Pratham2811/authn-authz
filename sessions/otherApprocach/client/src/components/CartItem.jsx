@@ -1,16 +1,17 @@
 import { Trash2 } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { deleteCartApi, getCartApi } from "../api/cartApi";
 
 export default function CartItem({ item }) {
-  const { removeFromCart } = useCart();
-  const handleRemoveFromcart= async (course)=>{
-    console.log(course);
-    
-       const response=await removeFromCart(course);
-       
+  const { name, image, quantity, price ,_id} = item.courseId;
+  console.log(item);
+  
+    const {setCart}=useCart();
+  const handleRemoveCart=async (courseId)=>{
+    const data=await deleteCartApi(courseId);
+    const cartData=await getCartApi();
+    setCart(cartData);  
   }
-  const { name, image, quantity, price }=item.courseId;
- 
   return (
     <div className="flex items-center p-6 space-x-6">
       <img
@@ -22,7 +23,7 @@ export default function CartItem({ item }) {
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {name}
         </h3>
-        <p className="text-gray-600 dark:text-gray-300">Quantity: {quantity}</p>
+        <p className="text-gray-600 dark:text-gray-300">Quantity: {item.quantity}</p>
       </div>
       <div className="text-right">
         <p className="text-lg font-semibold text-indigo-600 dark:text-indigo-400">
@@ -30,7 +31,7 @@ export default function CartItem({ item }) {
         </p>
       </div>
       <button
-        onClick={() => handleRemoveFromcart(item.courseId)}
+        onClick={() => handleRemoveCart(_id)}
         className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 cursor-pointer"
       >
         <Trash2 className="w-5 h-5" />

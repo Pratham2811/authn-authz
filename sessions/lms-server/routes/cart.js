@@ -31,7 +31,10 @@ router.post("/", async (req, res) => {
           "courses.$.quantity": 1,
         },
       },
+      
     );
+    console.log(cartData);
+      
     return res.json(cartData);
   } else {
     const cartData = await Cart.findOneAndUpdate(
@@ -45,6 +48,8 @@ router.post("/", async (req, res) => {
         },
       },
     );
+    console.log(cartData);
+      
     return res.json(cartData);
   }
 });
