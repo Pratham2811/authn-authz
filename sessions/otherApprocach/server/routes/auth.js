@@ -142,9 +142,27 @@ router.post("/logout", async (req, res) => {
       messgae: "Invalid session",
     });
   }
-  const session = await Session.findOne({ sid: sessionId });
+  const session = await Session.deleteOne({ userId: sessionId });
+  
+  res.clearCookie("sid").status(200).json({
+    message:"user Logged Out sucessFully",
 
-  console.log(session);
+  })
 });
 
+router.get("/me",async (req,res)=>{
+  const sessionId=req.signedCookies.sid;
+  if(!sessionId){
+    return res.status(404).json({
+      message:"user not found",
+    })
+  }
+
+  const user=await User.findById({_id:sessionId})
+
+  return res.status(200).json({
+    user
+  })
+
+})
 export default router;

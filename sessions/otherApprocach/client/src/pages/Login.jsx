@@ -2,17 +2,25 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import { redirect, useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 export default function Login() {
   const navigate=useNavigate()
   const [email, setEmail] = useState("shubham@gmail.com");
   const [password, setPassword] = useState("shubham@123");
-  const {login}=useAuth()
+  const {login}=useAuth();
+  const {getCart}=useCart();
+  const {setUser}=useAuth()
   const handleSubmit = async(e) => {
     e.preventDefault();
     const response=await login({email,password});
     if(response.success){
       toast.success("Usr Logged in sucessFully");
+      console.log(response);
+      
+      setUser(response.data)
+      const setCart=await getCart();
       navigate("/");
+      
     }else{
       toast.error(response.error)
     }

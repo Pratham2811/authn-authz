@@ -25,7 +25,7 @@ export function CartProvider({ children }) {
   const removeFromCart = (course) => {
     setCart((prevCart) => prevCart.filter((item) => item.name !== course.name));
   };
-const getCart=async()=>{
+ const getCart=async()=>{
   const response=await getCartApi();
   setCart(response);
 }
@@ -37,11 +37,11 @@ useEffect(()=>{
     (total, item) => total + (item.quantity || 1),
     0
   );
-  console.log(cart);
+
   
   return (
     <CartContext.Provider
-      value={{ cart, setCart,addToCart, removeFromCart, cartCount }}
+      value={{ cart, setCart,addToCart, removeFromCart, cartCount,getCart}}
     >
       {children}
     </CartContext.Provider>

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ShoppingCart, Sun, Moon, User } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import toast from "react-hot-toast";
 import {
   Menu,
   MenuButton,
@@ -13,8 +14,18 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Navbar({ darkMode, toggleDarkMode }) {
   const { cartCount } = useCart();
-  const { user, logout } = useAuth();
+  const { user, logout, getUser } = useAuth();
 console.log(cartCount);
+const handleLogout=async()=>{
+  const response=await logout();
+  if(response.success){
+    toast.success("user logged out ")
+
+  }else{
+   toast.error("user not logged out")
+  }
+  
+}
 
   return (
     <nav className="sticky top-0 left-0 right-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-lg mb-4">
@@ -81,7 +92,7 @@ console.log(cartCount);
                         </div>
                         <MenuItem>
                           <button
-                            onClick={logout}
+                            onClick={handleLogout}
                             className={`group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:dark:bg-white/10 data-[focus]:bg-gray-200 dark:text-gray-200`}
                           >
                             Sign out
