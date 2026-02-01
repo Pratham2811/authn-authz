@@ -14,10 +14,7 @@ export default function Login() {
     e.preventDefault();
     const response=await login({email,password});
     if(response.success){
-      toast.success("Usr Logged in sucessFully");
-      console.log(response);
-      
-      setUser(response.data)
+      toast.success("Usr Logged in sucessFully");     
       const setCart=await getCart();
       navigate("/");
       

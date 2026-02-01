@@ -3,12 +3,14 @@ import { getAllCoursesApi } from "../api/courseApi";
 import { useEffect } from "react";
 import { useCart } from "../context/CartContext";
 import { getCartApi } from "../api/cartApi";
+import { useAuth } from "../context/AuthContext";
 const courses = await getAllCoursesApi();
 
 
 
 export default function Home() {
    const {setCart}=useCart();
+   
     const fetchCart = async () => {
       const data = await getCartApi();
       setCart(data);

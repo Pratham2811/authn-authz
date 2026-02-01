@@ -7,23 +7,23 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
 
   const addToCart = async (course) => {
-    setCart((prevCart) => {
-      const existingCourse = prevCart.find((item) => item.name === course.name);
+    // setCart((prevCart) => {
+    //   const existingCourse = prevCart.find((item) => item.name === course.name);
 
-      if (existingCourse) {
-        return prevCart.map((item) =>
-          item.name === course.name
-            ? { ...item, quantity: (item.quantity || 1) + 1 }
-            : item
-        );
-      }
+    //   if (existingCourse) {
+    //     return prevCart.map((item) =>
+    //       item.name === course.name
+    //         ? { ...item, quantity: (item.quantity || 1) + 1 }
+    //         : item
+    //     );
+    //   }
 
-      return [...prevCart, { ...course, quantity: 1 }];
-    });
+    //   return [...prevCart, { ...course, quantity: 1 }];
+    // });
   };
 
   const removeFromCart = (course) => {
-    setCart((prevCart) => prevCart.filter((item) => item.name !== course.name));
+    // setCart((prevCart) => prevCart.filter((item) => item.name !== course.name));
   };
  const getCart=async()=>{
   const response=await getCartApi();

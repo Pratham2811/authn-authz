@@ -112,7 +112,7 @@ router.post("/login", async (req, res) => {
   const newSession = await Session.create({
     sid: crypto.randomUUID(),
     userId: user._id,
-    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    expiresAt: new Date(Date.now()/1000+60*60*60),
   });
 
   res.cookie("sid", user._id, {
@@ -157,8 +157,21 @@ router.get("/me",async (req,res)=>{
       message:"user not found",
     })
   }
-
+ 
+  
+  const session=await Session.findOne({userId:sessionId});
+  
+  
   const user=await User.findById({_id:sessionId})
+  const currentTime=Math.round(Date.now()/1000);
+  console.log(currentTime-session.expiresAt);
+  
+  if(session.expiresAt<currentTime){
+    return res.clearCookie("sid").status(401).json({
+      status:"Error",
+      message:"Session Expired",
+    })
+  }
 
   return res.status(200).json({
     user

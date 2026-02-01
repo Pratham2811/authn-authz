@@ -2,7 +2,6 @@ import axiosInstance from "./axiosInstance";
 
 export const getCartApi = async () => {
   const response = await axiosInstance.get("/cart");
-  console.log(response);
   
   return response.data.courses;
 };

@@ -6,11 +6,11 @@ export default function CartItem({ item }) {
   const { name, image, quantity, price ,_id} = item.courseId;
   console.log(item);
   
-    const {setCart}=useCart();
+    const {setCart,getCart}=useCart();
   const handleRemoveCart=async (courseId)=>{
     const data=await deleteCartApi(courseId);
-    const cartData=await getCartApi();
-    setCart(cartData);  
+    const cartData=await getCart();
+   
   }
   return (
     <div className="flex items-center p-6 space-x-6">

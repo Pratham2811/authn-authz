@@ -13,11 +13,12 @@ import { Fragment } from "react";
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar({ darkMode, toggleDarkMode }) {
-  const { cartCount } = useCart();
-  const { user, logout, getUser } = useAuth();
+  const { cartCount,setCart} = useCart();
+  const { user, logout } = useAuth();
 console.log(cartCount);
 const handleLogout=async()=>{
   const response=await logout();
+   setCart([]);
   if(response.success){
     toast.success("user logged out ")
 

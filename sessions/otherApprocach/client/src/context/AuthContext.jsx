@@ -12,6 +12,7 @@ export function AuthProvider({ children }) {
       setLoading(true);
       const response = await loginUser(userData);
       setUser(response.user);
+      getUser();
       return { success: true, data: response };
     } catch (error) {
       return {
@@ -65,14 +66,14 @@ export function AuthProvider({ children }) {
     setLoading(true);
     const response=await getUserApi();
     setUser(response);
-    console.log(user);
+  
 
   }
   useEffect(()=>{
     getUser()
   },[])
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading ,setUser}}>
+    <AuthContext.Provider value={{ user, login, getUser,register, logout, loading ,setUser}}>
       {children}
     </AuthContext.Provider>
   );
